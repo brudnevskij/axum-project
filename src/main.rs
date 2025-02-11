@@ -13,7 +13,7 @@ async fn main() {
         get(|| async { Html("<h1>Hello, World!</h1>") }),
     );
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
     println!("listening on {}", addr);
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
     axum::serve(listener, routes_hello.into_make_service()).await.unwrap();
