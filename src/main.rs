@@ -1,8 +1,9 @@
 use std::net::{SocketAddr,};
 use axum::response::{Html, IntoResponse};
 use axum::{Router, ServiceExt};
+use axum::extract::Query;
 use axum::routing::get;
-
+use serde::Deserialize;
 
 #[tokio::main]
 async fn main() {
@@ -17,7 +18,13 @@ async fn main() {
     axum::serve(listener, routes_hello.into_make_service()).await.unwrap();
 }
 
-async fn handler_hello() -> impl IntoResponse {
+#[derive(Debug, Deserialize)]
+struct HelloParams {
+    name: Option<String>
+}
+async fn handler_hello(Query(params): Query<HelloParams>) -> impl IntoResponse {
     println!("->> {:<12} - handler_hello", "HANDLER");
-    Html("<h1>Hello</h1>")
+
+    let name = params.name.as_deref().unwrap_or("World");
+    Html(format!("<h1>Hello, {name}</h1>"))
 }
