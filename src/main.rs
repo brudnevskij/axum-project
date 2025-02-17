@@ -5,6 +5,10 @@ use axum::{Router, ServiceExt};
 use serde::Deserialize;
 use std::net::SocketAddr;
 use tower_http::services::ServeDir;
+pub use self::error::{Error, Result};
+
+mod error;
+mod web;
 
 #[tokio::main]
 async fn main() {
