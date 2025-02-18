@@ -1,3 +1,4 @@
+pub use self::error::{Error, Result};
 use axum::extract::{Path, Query};
 use axum::response::{Html, IntoResponse};
 use axum::routing::{get, get_service};
@@ -5,7 +6,6 @@ use axum::{Router, ServiceExt};
 use serde::Deserialize;
 use std::net::SocketAddr;
 use tower_http::services::ServeDir;
-pub use self::error::{Error, Result};
 
 mod error;
 mod web;
@@ -14,6 +14,7 @@ mod web;
 async fn main() {
     let routes_all = Router::new()
         .merge(routes_hello())
+        .merge(web::routes_login::routes())
         .fallback_service(routes_static());
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
