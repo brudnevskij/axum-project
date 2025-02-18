@@ -11,7 +11,7 @@ serde_json = "1"
 # Axum
 axum = "0.8.1"
 tower-http = { version = "0.5", features = ["fs"]}
-lazy_static = "1.5.0"
+tower-cookies = "0.11.0"
 
 [dev-dependencies]
 anyhow = "1"
