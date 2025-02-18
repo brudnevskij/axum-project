@@ -1,8 +1,8 @@
 pub use self::error::{Error, Result};
 use axum::extract::{Path, Query};
-use axum::response::{Html, IntoResponse};
+use axum::response::{Html, IntoResponse, Response};
 use axum::routing::{get, get_service};
-use axum::{Router, ServiceExt};
+use axum::{middleware, Router, ServiceExt};
 use serde::Deserialize;
 use std::net::SocketAddr;
 use tower_http::services::ServeDir;
@@ -14,7 +14,8 @@ mod web;
 async fn main() {
     let routes_all = Router::new()
         .merge(routes_hello())
-        .merge(web::routes_login::routes())
+        .merge(web::routes_login::routes()).
+        layer(middleware::map_response(main_response_mapper))
         .fallback_service(routes_static());
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
@@ -23,6 +24,13 @@ async fn main() {
     axum::serve(listener, routes_all.into_make_service())
         .await
         .unwrap();
+}
+
+async fn main_response_mapper(res: Response) -> Response {
+    println!("->> {:<12} - main_response_mapper", "RES_MAPPER");
+
+    println!();
+    res
 }
 
 fn routes_hello() -> Router {
